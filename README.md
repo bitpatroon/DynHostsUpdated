@@ -90,6 +90,31 @@ Your hosts file automatically receives the new hosts.
 Each time you restart the docker container, the hosts file is updated.
 And then you host is available in your host machine.
 
+## Running as service
+
+To silently perform the operations, store the binary and the configuration in any folder on your system. 
+(see /bin)
+
+1. Install the service:
+``` DynHostsUpdater.exe install ```
+
+2. Configure the configuration
+
+3. Start the service
+``` DynHostsUpdater.exe start ```
+(or go to the services management console, search for the service and start it.)
+
+## Removing the service
+1. Stopping
+``` DynHostsUpdater.exe stop ```
+
+2. Removing
+``` DynHostsUpdater.exe uninstall ```
+
+3. Service not yet gone?
+Reboot your system.
+
+
 ## WARRANTEE
 
 *USE THIS PRODUCT AT YOUR OWN RISC*
