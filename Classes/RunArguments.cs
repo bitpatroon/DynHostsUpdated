@@ -17,11 +17,13 @@ namespace DynHosts.Classes
         public DateTime LastChangeTime = new DateTime();
         public string Command { get; set; }
         public bool AsService = false;
+        public bool FullDateTimeLog { get; set; }
 
         public RunArguments()
         {
             WatchFile = Settings.Default.watchFile;
             TargetFile = Settings.Default.targetFile;
+            FullDateTimeLog = Settings.Default.logWithFullDateTime;
         }
 
         public void ProcessCliArguments(string[] args)

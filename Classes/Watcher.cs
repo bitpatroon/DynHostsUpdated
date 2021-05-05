@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using DynHosts.Properties;
 
@@ -19,7 +21,7 @@ namespace DynHosts.Classes
                 RunArguments.LastChangeTime = File.GetLastWriteTime(watchFile);
             }
 
-            Log.WriteLine("Watching " + watchFile);
+            Log.WriteLine("Watching " + string.Join(Environment.NewLine + "\t- ",  watchFile .Split(';')));
             Log.WriteLine("Targeting " + RunArguments.TargetFile);
 
             if (RunArguments.AsService)
@@ -27,7 +29,7 @@ namespace DynHosts.Classes
                 // enable the service timer
                 return;
             }
-            
+
             Log.WriteLine();
             Log.WriteLine("Press ESC to quit.");
 
@@ -44,33 +46,74 @@ namespace DynHosts.Classes
 
         public void HandleSingleRun()
         {
+            var filesList = RunArguments.WatchFile;
+            var files = filesList.Split(';');
 
-            // check if the file was changed
-            if (File.Exists(RunArguments.WatchFile))
+            var allContent = new List<string>();
+            foreach (var file in files)
             {
-                RunArguments.LastChangeTime = File.GetLastWriteTime(RunArguments.WatchFile);
-                if (RunArguments.LastChangeTime > File.GetLastWriteTime(RunArguments.TargetFile))
+                var content = RetrieveContent(file);
+                if (string.IsNullOrEmpty(content))
                 {
+                    continue;
+                }
+
+                // allContent.Add(content);
+                var hash = MD5(file);
+
+                try
+                {
+                    var timeString = RunArguments.FullDateTimeLog
+                        ? DateTime.Now.ToShortTimeString()
+                        : "";
+                    timeString += " " + DateTime.Now.ToShortTimeString();
                     Log.Write(
-                        $"{DateTime.Now.ToShortTimeString()} Change detected; Updating {RunArguments.TargetFile} ... ");
-                    CopyWatchFileInTarget();
+                        $"{timeString} Changes detected; Updating {RunArguments.TargetFile} ... ");
+                    CopyWatchFileInTarget(content, hash);
                     Log.WriteLine("[Done]");
+                }
+                catch (Exception exception)
+                {
+                    Log.WriteLine("[Failed] " + exception.Message);
                 }
             }
         }
 
-        private void CopyWatchFileInTarget()
+        private string RetrieveContent(string file)
+        {
+            file = file.Replace('/', '\\');
+
+            if (!File.Exists(file))
+            {
+                return null;
+            }
+
+            var targetFile = RunArguments.TargetFile.Replace('/', '\\');
+            if (File.Exists(targetFile))
+            {
+                RunArguments.LastChangeTime = File.GetLastWriteTime(file);
+                if (RunArguments.LastChangeTime <= File.GetLastWriteTime(targetFile))
+                {
+                    return null;
+                }
+            }
+
+            return File.ReadAllText(file);
+        }
+
+        private void CopyWatchFileInTarget(string watchFilesContent, string hash)
         {
             // SearchFor the marker
 
             var commentPrefix = Settings.Default.commentPrefix ?? "; ";
-            var markerStart = $"{commentPrefix} ---- DynHostsStart";
-            var markerEnd = $"{commentPrefix} ---- DynHostsEnd";
+            var markerStart = $"{commentPrefix} ---- DynHostsStart - {hash}";
+            var markerEnd = $"{commentPrefix} ---- DynHostsEnd - {hash}";
 
             var content = "";
-            if (File.Exists(RunArguments.TargetFile))
+            var targetFile = RunArguments.TargetFile.Replace('/', '\\');
+            if (File.Exists(targetFile))
             {
-                content = File.ReadAllText(RunArguments.TargetFile);
+                content = File.ReadAllText(targetFile);
                 if (content.IndexOf(markerStart, StringComparison.Ordinal) >= 0)
                 {
                     // Remove the content 
@@ -84,10 +127,9 @@ namespace DynHosts.Classes
                 }
             }
 
-            var watchFileContent = File.ReadAllText(RunArguments.WatchFile);
-            content = string.Format("{0}{1}{1}{2}{1}{3}{1}{4}{1}", content, Environment.NewLine, markerStart,
-                watchFileContent, markerEnd);
-            File.WriteAllText(RunArguments.TargetFile, content);
+            content = string.Format("{0}{1}{1}{1}{2}{1}{3}{1}{4}{1}", content, Environment.NewLine, markerStart,
+                watchFilesContent, markerEnd);
+            File.WriteAllText(targetFile, content);
         }
 
         private void HandleUserKeyPress()
@@ -105,6 +147,19 @@ namespace DynHosts.Classes
                     RunArguments.StopSignaled = true;
                     Log.WriteLine("Quitting...");
                     break;
+            }
+        }
+
+        public static string MD5(string original)
+        {
+            using (var provider = System.Security.Cryptography.MD5.Create())
+            {
+                var builder = new StringBuilder();
+
+                foreach (var b in provider.ComputeHash(Encoding.UTF8.GetBytes(original)))
+                    builder.Append(b.ToString("x2").ToLower());
+
+                return builder.ToString();
             }
         }
     }

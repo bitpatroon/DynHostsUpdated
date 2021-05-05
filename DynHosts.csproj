@@ -78,10 +78,5 @@
     </None>
     <None Include="README.md" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Service.resx">
-      <DependentUpon>Service.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

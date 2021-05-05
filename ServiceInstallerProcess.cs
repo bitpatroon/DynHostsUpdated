@@ -8,7 +8,7 @@ namespace DynHosts
     {
         public ServiceInstallerProcess()
         {
-            Account = ServiceAccount.NetworkService;
+            Account = ServiceAccount.LocalSystem;
         }
     }
 

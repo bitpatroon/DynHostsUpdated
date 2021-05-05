@@ -95,12 +95,12 @@ namespace DynHosts
         private void InitTimer()
         {
             Timer = new Timer();
-            Timer.Elapsed += new ElapsedEventHandler(timer1_Tick);
+            Timer.Elapsed += new ElapsedEventHandler(timer_Tick);
             Timer.Interval = 1000; // ms
             Timer.Enabled = true;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
             Program.Watcher.HandleSingleRun();
             if (Program.RunArguments.StopSignaled) Timer.Enabled = false;

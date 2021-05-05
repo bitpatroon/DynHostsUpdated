@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DynHosts.Classes;
 
 namespace DynHosts
@@ -17,7 +13,7 @@ namespace DynHosts
         {
             Description = "Watches a file with hosts and sets the content to another host file that requires system permission to write to";
             DisplayName = "BPN-DynHosts-Updater";
-            ServiceName = Service.name;
+            ServiceName = Service.name + "-v4";
             StartType = System.ServiceProcess.ServiceStartMode.Automatic;
         }
         
@@ -46,15 +42,25 @@ namespace DynHosts
                         {
                             Log.Write("Removing the service...");
                             inst.Uninstall(state);
-                            inst.Commit(state);
                         }
                         else
                         {
                             Log.Write("Installing the service...");
                             inst.Install(state);
-                            inst.Commit(state);
                         }
+                        inst.Commit(state);
                         Log.WriteLine("Success");
+
+
+                        if (!remove)
+                        {
+                            Log.WriteLine("");
+                            Log.WriteLine("NOTICE The service is not yet active");
+                            Log.WriteLine("");
+                            Log.WriteLine("Please check your configuration before starting. ");
+                            Log.WriteLine("To start the service, execute: " );
+                            Log.WriteLine(typeof(Program).Assembly.Location + " start");
+                        }
                     }
                     catch (Exception exception)
                     {

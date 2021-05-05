@@ -25,7 +25,7 @@ namespace DynHosts.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:/temp/hosts.temp.txt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:/temp/hosts.temp.txt;c:/temp/hosts.temp2.txt")]
         public string watchFile {
             get {
                 return ((string)(this["watchFile"]));
@@ -56,6 +56,18 @@ namespace DynHosts.Properties {
             }
             set {
                 this["targetFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool logWithFullDateTime {
+            get {
+                return ((bool)(this["logWithFullDateTime"]));
+            }
+            set {
+                this["logWithFullDateTime"] = value;
             }
         }
     }

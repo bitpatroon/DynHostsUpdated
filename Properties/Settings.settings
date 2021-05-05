@@ -3,13 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="watchFile" Type="System.String" Scope="User">
-      <Value Profile="(Default)">c:/temp/hosts.temp.txt</Value>
+      <Value Profile="(Default)">c:/temp/hosts.temp.txt;c:/temp/hosts.temp2.txt</Value>
     </Setting>
     <Setting Name="commentPrefix" Type="System.String" Scope="User">
       <Value Profile="(Default)">#</Value>
     </Setting>
     <Setting Name="targetFile" Type="System.String" Scope="User">
       <Value Profile="(Default)">d:/temp/hosts</Value>
+    </Setting>
+    <Setting Name="logWithFullDateTime" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>
