@@ -53,6 +53,7 @@ namespace DynHosts.Classes
         public static void DisplayHelp()
         {
             var executable = new FileInfo(Assembly.GetExecutingAssembly().Location).Name;
+            
             var help = Program.HelpInfo;
             help = help.Replace("__FILE__", executable);
             help = help.Replace("__ERROR__",

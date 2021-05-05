@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using DynHosts.Properties;
 
 namespace DynHosts.Classes
@@ -30,9 +27,7 @@ namespace DynHosts.Classes
         {
             startupArgs = args;
 
-            Log.WriteLine(Program.HelpInfoHeader, false);
-            Log.WriteLine();
-
+            WriteInfoHeader();
 
             var index = 0;
             while (index < args.Length)
@@ -66,6 +61,16 @@ namespace DynHosts.Classes
 
                 index++;
             }
+        }
+
+        private void WriteInfoHeader()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var header = Program.HelpInfoHeader;
+            header = header.Replace("__VERSION__", 'v' + version);
+
+            Log.WriteLine(header, false);
+            Log.WriteLine();
         }
 
         public string CliArguments()

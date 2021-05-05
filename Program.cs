@@ -13,11 +13,10 @@ namespace DynHosts
 
         protected static Service selfInstaller;
 
-        public static string HelpInfoHeader = @"Dynamic Hosts file Updater
+        public static string HelpInfoHeader = @"Dynamic Hosts file Updater (__VERSION__)
 (c) 2021 Bitpatroon";
 
-        public const string HelpInfo = @"
-__FILE__ [arguments] 
+        public const string HelpInfo = @"__FILE__ [arguments] 
 
 arguments
     run                 Start then dynamic dns host updater

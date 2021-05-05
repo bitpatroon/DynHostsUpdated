@@ -41,26 +41,24 @@ namespace DynHosts
                         if (remove)
                         {
                             Log.Write("Removing the service...");
+                            Log.WriteLine("------------------------");
                             inst.Uninstall(state);
                         }
                         else
                         {
                             Log.Write("Installing the service...");
+                            Log.WriteLine("");
+                            Log.WriteLine("NOTICE The service will not be active");
+                            Log.WriteLine("Please check your configuration before starting. ");
+                            Log.WriteLine("To start the service, execute: ");
+                            Log.WriteLine(typeof(Program).Assembly.Location + " start");
+                            Log.WriteLine("");
+                            Log.WriteLine("------------------------");
                             inst.Install(state);
                         }
                         inst.Commit(state);
                         Log.WriteLine("Success");
-
-
-                        if (!remove)
-                        {
-                            Log.WriteLine("");
-                            Log.WriteLine("NOTICE The service is not yet active");
-                            Log.WriteLine("");
-                            Log.WriteLine("Please check your configuration before starting. ");
-                            Log.WriteLine("To start the service, execute: " );
-                            Log.WriteLine(typeof(Program).Assembly.Location + " start");
-                        }
+                        
                     }
                     catch (Exception exception)
                     {
