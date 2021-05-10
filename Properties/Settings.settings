@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="watchFile" Type="System.String" Scope="User">
-      <Value Profile="(Default)">c:/temp/hosts.temp.txt;c:/temp/hosts.temp2.txt</Value>
+      <Value Profile="(Default)">c:/temp/hosts.temp.txt;c:/temp/hosts.temp2.txt;        D:\ProjectsA\spl\dev.spl.local\.docker\hosts.txt</Value>
     </Setting>
     <Setting Name="commentPrefix" Type="System.String" Scope="User">
       <Value Profile="(Default)">#</Value>
@@ -13,6 +13,15 @@
     </Setting>
     <Setting Name="logWithFullDateTime" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="updateIP" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="updateIPTarget" Type="System.String" Scope="User">
+      <Value Profile="(Default)">127.0.0.1</Value>
+    </Setting>
+    <Setting Name="updateIPLineContains" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BPN_DYNHOSTS_UPDATER</Value>
     </Setting>
   </Settings>
 </SettingsFile>

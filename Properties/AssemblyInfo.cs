@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DynHosts")]
+[assembly: AssemblyTitle("DynHostsUpdater")]
 [assembly: AssemblyDescription("File watcher for ao. hosts. Watches a file and updates another with the content of the first. Use at own risk!")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Bitpatroon")]
-[assembly: AssemblyProduct("DynHosts")]
+[assembly: AssemblyProduct("DynHostsUpdater")]
 [assembly: AssemblyCopyright("Copyright © Bitpatroon 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.0.0")]
-[assembly: AssemblyFileVersion("1.2.0.0")]
+[assembly: AssemblyVersion("1.2.3.0")]
+[assembly: AssemblyFileVersion("1.2.3.0")]

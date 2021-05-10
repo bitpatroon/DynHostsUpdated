@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -13,15 +14,10 @@ namespace DynHosts.Classes
 
         public void Run()
         {
-            var watchFile = RunArguments.WatchFile;
+            var watchFiles = RunArguments.WatchFileList;
             var targetFile = RunArguments.TargetFile;
 
-            if (File.Exists(RunArguments.WatchFile))
-            {
-                RunArguments.LastChangeTime = File.GetLastWriteTime(watchFile);
-            }
-
-            Log.WriteLine("Watching " + string.Join(Environment.NewLine + "\t- ",  watchFile .Split(';')));
+            Log.WriteLine("Watching " + string.Join(Environment.NewLine + "\t- ", RunArguments.WatchFileList));
             Log.WriteLine("Targeting " + RunArguments.TargetFile);
 
             if (RunArguments.AsService)
@@ -58,18 +54,20 @@ namespace DynHosts.Classes
                     continue;
                 }
 
-                // allContent.Add(content);
+                // SearchFor the marker and update IP (if found)
+                var updatedContent = UpdateIpInSource(content);
+                var updated = (updatedContent != content);
+                var updatedInfo = updated ? " (with corrected IP)" : "";
+
                 var hash = MD5(file);
 
                 try
                 {
-                    var timeString = RunArguments.FullDateTimeLog
-                        ? DateTime.Now.ToShortTimeString()
-                        : "";
-                    timeString += " " + DateTime.Now.ToShortTimeString();
-                    Log.Write(
-                        $"{timeString} Changes detected; Updating {RunArguments.TargetFile} ... ");
-                    CopyWatchFileInTarget(content, hash);
+                    var timeString = (RunArguments.FullDateTimeLog
+                        ? DateTime.Now.ToShortDateString() + " "
+                        : "") + DateTime.Now.ToShortTimeString();
+                    Log.Write($"{timeString} Changes detected; Updating{updatedInfo} {RunArguments.TargetFile} ... ");
+                    CopyWatchFileInTarget(updatedContent, hash);
                     Log.WriteLine("[Done]");
                 }
                 catch (Exception exception)
@@ -91,9 +89,9 @@ namespace DynHosts.Classes
             var targetFile = RunArguments.TargetFile.Replace('/', '\\');
             if (File.Exists(targetFile))
             {
-                RunArguments.LastChangeTime = File.GetLastWriteTime(file);
-                if (RunArguments.LastChangeTime <= File.GetLastWriteTime(targetFile))
+                if (File.GetLastWriteTime(file) <= File.GetLastWriteTime(targetFile))
                 {
+                    // not changed
                     return null;
                 }
             }
@@ -103,8 +101,6 @@ namespace DynHosts.Classes
 
         private void CopyWatchFileInTarget(string watchFilesContent, string hash)
         {
-            // SearchFor the marker
-
             var commentPrefix = Settings.Default.commentPrefix ?? "; ";
             var markerStart = $"{commentPrefix} ---- DynHostsStart - {hash}";
             var markerEnd = $"{commentPrefix} ---- DynHostsEnd - {hash}";
@@ -130,6 +126,38 @@ namespace DynHosts.Classes
             content = string.Format("{0}{1}{1}{1}{2}{1}{3}{1}{4}{1}", content, Environment.NewLine, markerStart,
                 watchFilesContent, markerEnd);
             File.WriteAllText(targetFile, content);
+        }
+
+        private string UpdateIpInSource(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                return content;
+            }
+
+            if (!Settings.Default.updateIP)
+            {
+                return content;
+            }
+
+            if (string.IsNullOrEmpty(Settings.Default.updateIPTarget))
+            {
+                return content;
+            }
+
+            var key = Settings.Default.updateIPLineContains ?? "BPN_DYNHOSTS_UPDATER";
+
+            var r = new Regex("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}).*?" + key);
+            var matches = r.Matches(content);
+
+            if (matches.Count == 0)
+            {
+                return content;
+            }
+
+            var ipAddress = matches[0].Groups[1].Value;
+
+            return content.Replace(ipAddress, Settings.Default.updateIPTarget);
         }
 
         private void HandleUserKeyPress()

@@ -25,7 +25,8 @@ namespace DynHosts.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:/temp/hosts.temp.txt;c:/temp/hosts.temp2.txt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:/temp/hosts.temp.txt;c:/temp/hosts.temp2.txt;        D:\\ProjectsA\\spl\\dev.spl.l" +
+            "ocal\\.docker\\hosts.txt")]
         public string watchFile {
             get {
                 return ((string)(this["watchFile"]));
@@ -68,6 +69,42 @@ namespace DynHosts.Properties {
             }
             set {
                 this["logWithFullDateTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool updateIP {
+            get {
+                return ((bool)(this["updateIP"]));
+            }
+            set {
+                this["updateIP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string updateIPTarget {
+            get {
+                return ((string)(this["updateIPTarget"]));
+            }
+            set {
+                this["updateIPTarget"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BPN_DYNHOSTS_UPDATER")]
+        public string updateIPLineContains {
+            get {
+                return ((string)(this["updateIPLineContains"]));
+            }
+            set {
+                this["updateIPLineContains"] = value;
             }
         }
     }
