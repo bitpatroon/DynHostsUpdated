@@ -147,7 +147,7 @@ namespace DynHosts.Classes
 
             var key = Settings.Default.updateIPLineContains ?? "BPN_DYNHOSTS_UPDATER";
 
-            var r = new Regex("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}).*?" + key);
+            var r = new Regex("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(.*?" + key + "[^\\n]+)");
             var matches = r.Matches(content);
 
             if (matches.Count == 0)
@@ -155,9 +155,31 @@ namespace DynHosts.Classes
                 return content;
             }
 
-            var ipAddress = matches[0].Groups[1].Value;
+            // now convert the found line in to separate host file lines
+            var hosts = matches[0].Groups[2].Value;
 
-            return content.Replace(ipAddress, Settings.Default.updateIPTarget);
+            r = new Regex("\\s+([^\\s]+)");
+            var hostMatches = r.Matches(hosts);
+            if (hostMatches.Count == 0)
+            {
+                return "";
+            }
+
+            var result = new List<string>();
+            foreach (Match host in hostMatches)
+            {
+                if (host.Groups.Count < 2)
+                {
+                    continue;
+                }
+
+                var host2 = host.Groups[1].Value;
+                result.Add(Settings.Default.updateIPTarget + "\t" + host.Groups[1].Value);
+            }
+
+            var replacingContent = string.Join("\n", result.ToArray());
+
+            return content.Replace(matches[0].Groups[0].Value, replacingContent);
         }
 
         private void HandleUserKeyPress()

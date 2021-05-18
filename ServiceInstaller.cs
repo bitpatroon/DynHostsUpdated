@@ -13,7 +13,7 @@ namespace DynHosts
         {
             Description = "Watches a file with hosts and sets the content to another host file that requires system permission to write to";
             DisplayName = "BPN-DynHosts-Updater";
-            ServiceName = Service.name + "-v4";
+            ServiceName = Service.name + "-v5";
             StartType = System.ServiceProcess.ServiceStartMode.Automatic;
         }
         
